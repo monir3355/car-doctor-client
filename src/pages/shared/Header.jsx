@@ -23,7 +23,7 @@ const Header = () => {
   const navItems = (
     <>
       <li>
-        <a>Home</a>
+        <Link to="/">Home</Link>
       </li>
       <li>
         <a>About</a>
@@ -31,6 +31,11 @@ const Header = () => {
       <li>
         <a>Services</a>
       </li>
+      {user && (
+        <li>
+          <Link to="/bookings">My Bookings</Link>
+        </li>
+      )}
       <li>
         <a>Blog</a>
       </li>

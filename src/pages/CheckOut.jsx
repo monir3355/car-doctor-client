@@ -66,6 +66,7 @@ const CheckOut = () => {
             <input
               type="text"
               name="amount"
+              defaultValue={price}
               placeholder="$2000"
               className="input input-bbookinged"
             />
@@ -74,6 +75,7 @@ const CheckOut = () => {
             <input
               type="email"
               name="email"
+              defaultValue={user?.email}
               placeholder="Your Email"
               className="input input-bbookinged"
             />
