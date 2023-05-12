@@ -2,15 +2,28 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../provider/AuthProvider";
 import BookingRow from "./BookingRow";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Bookings = () => {
   const { user } = useContext(AuthContext);
   const [bookings, setBookings] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
-    const url = `https://car-doctor-server-alpha.vercel.app/bookings?email=${user?.email}`;
-    fetch(url)
+    const url = `http://localhost:5000/bookings?email=${user?.email}`;
+    fetch(url, {
+      method: "GET",
+      headers: {
+        authorization: `bearer ${localStorage.getItem("car-access-token")}`,
+      },
+    })
       .then((res) => res.json())
-      .then((data) => setBookings(data));
+      .then((data) => {
+        if (!data.error) {
+          setBookings(data);
+        } else {
+          navigate("/");
+        }
+      });
   }, []);
 
   const handleDelete = (id) => {
@@ -67,7 +80,7 @@ const Bookings = () => {
         <table className="table w-full">
           <tbody>
             {/* row 1 */}
-            {bookings.map((booking) => (
+            {bookings?.map((booking) => (
               <BookingRow
                 key={booking._id}
                 booking={booking}

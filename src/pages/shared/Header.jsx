@@ -15,6 +15,7 @@ const Header = () => {
           icon: "success",
           confirmButtonText: "Yes",
         });
+        localStorage.removeItem("car-access-token");
       })
       .catch((error) => {
         console.log(error);

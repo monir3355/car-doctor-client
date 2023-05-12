@@ -7,7 +7,7 @@ import {
   FaGoogle,
   FaLinkedin,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, json, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../provider/AuthProvider";
 
 const Login = () => {
@@ -15,17 +15,37 @@ const Login = () => {
   const [error, setError] = useState("");
   const [eye, setEye] = useState(false);
   const { signIn } = useContext(AuthContext);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const from = location.state?.from?.pathname || "/";
   const handleLogin = (event) => {
     event.preventDefault();
     const form = event.target;
     const email = form.email.value;
     const password = form.password.value;
-    console.log(email, password);
     signIn(email, password)
       .then((result) => {
         const loggedUser = result.user;
         console.log(loggedUser);
+        const loggedEmail = {
+          email: loggedUser.email,
+        };
+        console.log(loggedEmail);
         setSuccess("User signIn successfully");
+        // navigate(from, { replace: true });
+        fetch("http://localhost:5000/jwt", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify(loggedEmail),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("jwt response", data);
+            localStorage.setItem("car-access-token", data.token);
+            navigate(from, { replace: true });
+          });
       })
       .catch((error) => {
         setError(error.message);
